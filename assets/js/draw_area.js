@@ -9,8 +9,9 @@ var DrawArea = function(canvas) {
   canvas.ctx.fillStyle = "rgb(200,0,0)";  
   canvas.isDown = false;
 
-  canvas.onmousedown = function() {
+  canvas.onmousedown = function(e) {
     msg("down");
+    this.start = e;
     this.isDown = true;
   }
 
@@ -22,10 +23,11 @@ var DrawArea = function(canvas) {
   canvas.onmousemove = function(e) {
     msg(e.clientX);
     if (this.isDown == true) {
-      var x = e.clientX;
-      var y = e.clientY;
-
-      this.ctx.fillRect (x, y, 5, 5);  
+      this.ctx.beginPath();  
+      this.ctx.moveTo(this.start.clientX, this.start.clientY);
+      this.ctx.lineTo(e.clientX, e.clientY);
+      this.ctx.stroke();
+      this.start = e;
     }
   }
 }

@@ -23,6 +23,7 @@
 		<script src="assets/js/app.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 	<body>
+		<div id="message">Ready.</div>
 		<canvas id="draw_area" onmousedown="draw.down()" onmouseup="draw.up()" onmousemove="draw.move()"></canvas>
 		<script>
 			var draw = new DrawArea(document.getElementById("draw_area"));

@@ -3,27 +3,29 @@ function msg(message) {
 }
 
 var DrawArea = function(canvas) {
-  this.ctx = canvas.getContext("2d");  
-  this.ctx.fillStyle = "rgb(200,0,0)";  
-  this.down = false;
+  canvas.width = document.width;
+  canvas.height = document.height;
+  canvas.ctx = canvas.getContext("2d");  
+  canvas.ctx.fillStyle = "rgb(200,0,0)";  
+  canvas.isDown = false;
 
-  this.down = function() {
+  canvas.onmousedown = function() {
     msg("down");
     this.isDown = true;
   }
 
-  this.up = function() {
+  canvas.onmouseup = function() {
     msg("up");
     this.isDown = false;
   }
 
-  this.move = function() {
-    msg("move");
+  canvas.onmousemove = function(e) {
+    msg(e.clientX);
     if (this.isDown == true) {
-      var x = 300 * Math.random();
-      var y = 300 * Math.random();
+      var x = e.clientX;
+      var y = e.clientY;
 
-      this.ctx.fillRect (x, y, x+5, y+5);  
+      this.ctx.fillRect (x, y, 5, 5);  
     }
   }
 }

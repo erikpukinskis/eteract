@@ -2,7 +2,7 @@
 <widget xmlns		= "http://www.w3.org/ns/widgets"
 	xmlns:gap	= "http://phonegap.com/ns/1.0"
 	id		= "net.snowedin.eteract"
-	version 	= "0.1">
+	version 	= "0.3">
 
 	<name>Eteract</name>
 
@@ -16,9 +16,6 @@
 	</author>
 
 	<icon src="icon.png" gap:role="default" />
-
-	<feature name="http://api.phonegap.com/1.0/geolocation"/>
-	<feature name="http://api.phonegap.com/1.0/network"/>
 
 	<preference name="orientation" value="portrait" />
 </widget>

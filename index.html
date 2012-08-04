@@ -25,7 +25,9 @@
 		<div id="message">and the message</div>
 		<canvas id="draw_area"></canvas>
 		<div id="buttons">
-			<button onclick="if(confirm('Clear?')) { draw.clearAll(); }">Clear</button>
+			<button onclick="if(true /* confirm('Clear?')*/) { draw.reset() }">Clear</button>
+			<button onclick="draw.undo()">&#8617;</button>
+			<button onclick="draw.redo()">&#8618;</button>
 		</div>
 		<script>
 			var draw = new DrawArea(document.getElementById("draw_area"));

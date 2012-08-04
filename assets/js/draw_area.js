@@ -15,22 +15,22 @@ var DrawArea = function(canvas) {
   canvas.isDown = false;
   msg("ready");
   canvas.DROP_THRESHOLD = 4;
+  canvas.segments = [];
+  canvas.undoPos = 0;
 
   canvas.markstart = function(p) {
     if (this.pendingMove) {
       clearTimeout(this.pendingMove);
       this.pendingMove = null;
     }
+    this.segments[this.undoPos] = [p];
+    this.undoPos++;
 
     msg("down");
     this.start = p;
     this.isDown = true;
     this.prevD = null;
-    this.ctx.fillStyle="black";
-    this.ctx.beginPath();
-    this.ctx.arc(p.x,p.y,1,0,Math.PI*2,true);
-    this.ctx.closePath();
-    this.ctx.fill();
+    this.drawSegment([p])
   }
 
   canvas.markend = function(p) {
@@ -47,7 +47,38 @@ var DrawArea = function(canvas) {
   canvas.movePen = function(p) {
     if (!this.isDown) { return }
     this.drawLine(this.start, p);
+    this.segments[this.undoPos-1].push(p);
     this.start = p;
+  }
+
+  canvas.replay = function() {
+    for(var i=0; i<this.undoPos; i++) {
+      this.drawSegment(this.segments[i]);
+    }
+  }
+
+  canvas.undo = function() {
+    if(this.undoPos > 0) { this.undoPos-- }
+    this.clearAll();
+    this.replay();
+  }
+
+  canvas.redo = function() {
+    if(this.segments[this.undoPos]) { this.undoPos++ }
+    this.clearAll();
+    this.replay();
+  }
+
+  canvas.drawSegment = function (pts) {
+    this.ctx.fillStyle="black";
+    this.ctx.beginPath();
+    this.ctx.arc(pts[0].x,pts[0].y,1,0,Math.PI*2,true);
+    this.ctx.closePath();
+    this.ctx.fill();
+
+    for(var i=1; i<pts.length; i++) {
+      this.drawLine(pts[i-1], pts[i]);
+    }
   }
 
   canvas.drawLine = function(start, end, color) {
@@ -74,7 +105,12 @@ var DrawArea = function(canvas) {
 
   canvas.clearAll = function() {
     this.ctx.clearRect(0,0,this.width,this.height);
+  }
+
+  canvas.reset = function() {
+    this.clearAll();
     this.i = 0;
+    this.undoPos = 0;
   }
 
   canvas.connectEvents('touchstart', 'mousedown', 'markstart');

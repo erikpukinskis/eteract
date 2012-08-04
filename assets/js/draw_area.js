@@ -27,32 +27,33 @@ var DrawArea = function(canvas) {
   }
 
   canvas.stroke = function(val) {
-    if (val > 255) { val = 255};
-    if (val < 0) { val = 0 };
-    this.ctx.strokeStyle = "rgb(" + val + ",0,0)";      
-    msg(val);
+    if (val > 255) { 
+      this.ctx.strokeStyle = "white";
+      msg("MAX");
+    } else {
+      this.ctx.strokeStyle = "rgb(" + val + "," + val + "," + val + ")";      
+      msg(val);
+    }
   }
 
   canvas.markmove = function(p) {
+    if (!this.isDown) { return }
     //msg(p.x + "," + p.y);
-    if (this.isDown == true) {
-      var d = Math.abs(p.x - this.start.x + p.y - this.start.y);
-      if (this.prevD) {
-        diff = d / this.prevD;
-        msg(diff);
-        this.stroke(50*diff);
-      } else {
-        msg('No prevD')
-        this.stroke(0)
+    var d = Math.abs(p.x - this.start.x + p.y - this.start.y);
+    if (this.prevD) {
+      diff = d / this.prevD;
+      if (diff > 5) {
+        this.markend();
+        msg("BURN!");
       }
-
-      this.ctx.beginPath();  
-      this.ctx.moveTo(this.start.x, this.start.y);
-      this.ctx.lineTo(p.x, p.y);
-      this.ctx.stroke();
-      this.start = p;
-      this.prevD = d;
     }
+
+    this.ctx.beginPath();  
+    this.ctx.moveTo(this.start.x, this.start.y);
+    this.ctx.lineTo(p.x, p.y);
+    this.ctx.stroke();
+    this.start = p;
+    this.prevD = d;
   }
 
   canvas.connectEvents = function(touch, mouse, mark) {

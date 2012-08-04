@@ -9,8 +9,8 @@ function msg(message) {
 }
 
 var DrawArea = function(canvas) {
-  canvas.width = 400;
-  canvas.height = 400;
+  canvas.width = document.width;
+  canvas.height = document.height;
   canvas.ctx = canvas.getContext("2d");  
   canvas.isDown = false;
   msg("ready");
@@ -58,6 +58,7 @@ var DrawArea = function(canvas) {
     this.ctx.lineTo(end.x, end.y);
     this.ctx.stroke();   
   }
+
   canvas.connectEvents = function(touch, mouse, mark) {
     canvas.addEventListener(mouse, function(e) {
       this[mark]({x: e.clientX, y: e.clientY});

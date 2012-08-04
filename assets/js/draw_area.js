@@ -12,7 +12,6 @@ var DrawArea = function(canvas) {
   canvas.width = 400;
   canvas.height = 400;
   canvas.ctx = canvas.getContext("2d");  
-  canvas.ctx.fillStyle = "rgb(200,0,0)";  
   canvas.isDown = false;
   msg("ready");
 
@@ -27,14 +26,32 @@ var DrawArea = function(canvas) {
     this.isDown = false;
   }
 
+  canvas.stroke = function(val) {
+    if (val > 255) { val = 255};
+    if (val < 0) { val = 0 };
+    this.ctx.strokeStyle = "rgb(" + val + ",0,0)";      
+    msg(val);
+  }
+
   canvas.markmove = function(p) {
-    msg(p.x + "," + p.y);
+    //msg(p.x + "," + p.y);
     if (this.isDown == true) {
+      var d = Math.abs(p.x - this.start.x + p.y - this.start.y);
+      if (this.prevD) {
+        diff = d / this.prevD;
+        msg(diff);
+        this.stroke(50*diff);
+      } else {
+        msg('No prevD')
+        this.stroke(0)
+      }
+
       this.ctx.beginPath();  
       this.ctx.moveTo(this.start.x, this.start.y);
       this.ctx.lineTo(p.x, p.y);
       this.ctx.stroke();
       this.start = p;
+      this.prevD = d;
     }
   }
 

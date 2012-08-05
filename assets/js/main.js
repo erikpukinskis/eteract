@@ -1,6 +1,6 @@
 function tool(toolname) {
-  var classes = "btn-primary active";
-  $(".tool").removeClass(classes);
-  $("#" + toolname + "_tool").addClass(classes)
-  draw.tool = toolname;
+  if (toolname == "link") { 
+    msg('Draw a box around the area to activate')
+  }
+  draw.setTool(toolname);
 }

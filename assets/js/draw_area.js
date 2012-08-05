@@ -25,21 +25,46 @@ var DrawArea = function(canvas) {
     eraser: {strokeStyle: 'white', lineWidth: 20},
   }
 
+  canvas.setTool = function(tool) {
+    var classes = "btn-primary active";
+    $(".tool").removeClass(classes);
+    $("#" + tool + "_tool").addClass(classes)
+
+    this.lastTool = this.tool;
+    this.tool = tool;
+    if(tool == "frame") {
+      $("body").append("<div class='picking frame'>");
+    }
+  }
+
+  canvas.isPen = function() {
+    return this.tool == "pen" || this.tool == "eraser"
+  }
+
   canvas.markstart = function(p) {
     if (this.pendingMove) {
       clearTimeout(this.pendingMove);
       this.pendingMove = null;
     }
-    var line = new Line(this.tool);
-    line.addPoint(p);
-    this.segments[this.undoPos] = line;
-    this.undoPos++;
 
-    msg("down");
-    this.start = p;
-    this.isDown = true;
-    this.prevD = null;
-    line.draw(this);
+    if(this.isPen()) {
+      var line = new Line(this.tool);
+      line.addPoint(p);
+      this.segments[this.undoPos] = line;
+      this.undoPos++;
+
+      msg("down");
+      this.start = p;
+      this.isDown = true;
+      this.prevD = null;
+      line.draw(this);
+    } else if (this.tool == "frame") {
+      $(".picking.frame").addClass("picked").removeClass("picking");
+      var title = prompt("Name your frame.");
+      $(".picked.frame").append("<div class='title'>" + title + "</div>");
+      $(".picked.frame").removeClass("picked");
+      this.setTool(this.lastTool);
+    }
   }
 
   canvas.markend = function(p) {
@@ -48,9 +73,14 @@ var DrawArea = function(canvas) {
   }
 
   canvas.markmove = function(p) {
-    this.pendingMove = setTimeout(function(canvas, p) {
-      canvas.movePen(p);
-    }, 1, this, p);
+    if(this.isPen()) {
+      this.pendingMove = setTimeout(function(canvas, p) {
+        canvas.movePen(p);
+      }, 1, this, p);
+    } else if(this.tool == "frame") {
+      var frame = $(".picking.frame");
+      frame.css({top: p.y + "px", left: p.x + "px"});
+    }
   }
 
   canvas.movePen = function(p) {

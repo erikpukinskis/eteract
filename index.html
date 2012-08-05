@@ -39,12 +39,13 @@
 			</div>
 
 			<div class="btn-group">
-				<select class="btn btn-large" id="files">
-					<option>Home</option>
-					<option>A nother</option>
-					<option>------</option>
-					<option>New page</option>
-				</select>
+				<button class="tool btn btn-large" onclick="$('#pages').toggle();" id="pages_button"></button>
+				<div id="pages" class="hide">
+					<ul>
+					</ul>
+					<div class="callout-arrow"></div>
+				</div>
+				<button class="tool btn btn-large" onclick="draw.new()">+</button>
 			</div>
 
 		</div>

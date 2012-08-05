@@ -37,9 +37,49 @@ body {
   line-height: 17px;
 }
 
-#files {
-  width: 100px;
-  height: 37px;
-  border: 1px solid #ccc;
-  background-color: none;
+#pages {
+  position: absolute;
+  bottom: 50px;
+  background-color: white;
+  border: 3px solid #eee;
+  border-radius: 5px;
+  width: 150px;
+  box-shadow: 1px 4px 5px rgba(0,0,0,0.04);
+}
+
+#pages ul {
+  min-height:10px;
+  margin: 0;
+  list-style: none;
+}
+
+#pages .callout-arrow {
+  bottom: 0;
+  background-color: white;
+  width: 10px;
+  height: 10px;
+  border: 3px solid #eee;
+  -webkit-transform: rotate(45deg);
+  border-width: 0 3px 3px 0;
+  margin-bottom: -9px;
+  margin-left: 10px;
+  box-shadow: 4px 2px 5px rgba(0,0,0,0.04);
+}
+
+#pages li {
+  padding: 15px;
+  font-size: 1.2em;
+  border-top: 1px solid #eee;
+}
+
+#pages li:first-child {
+  border-bottom: none;
+}
+
+#pages a {
+  color: #444;
+}
+
+#pages a:hover {
+  text-decoration: none;
 }

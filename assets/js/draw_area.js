@@ -18,9 +18,8 @@ var DrawArea = function(canvas) {
   canvas.DROP_THRESHOLD = 4;
   canvas.segments = [];
   canvas.undoPos = 0;
+  canvas.pages = []
   canvas.tool = "pen";
-  canvas.pages = [{name: "Home", segments: []}];
-  canvas.page = 0;
 
   canvas.BRUSHES = {
     pen: {strokeStyle: 'black', lineWidth: 1},
@@ -43,16 +42,24 @@ var DrawArea = function(canvas) {
     return this.tool == "pen" || this.tool == "eraser"
   }
 
-  canvas.new = function() {
-    var name = prompt("Name for new page:");
-    this.pages.push({name: name, segments: []});
-    this.open(this.pages.length-1);
+  canvas.new = function(name) {
+    if (!name) {
+      name = prompt("Name for new page:");
+    } 
+    this.pages.push({name: name, segments: [], undoPos: 0});
+    var page = this.pages.length-1;
+    this.open(page);
+    $("#pages ul").append("<li><a href='#' onclick='draw.open(" + page + "); return false;'>" + name + "</a></li>");
   }
 
   canvas.open = function(page) {
-    this.pages[this.page].segments = this.segments;
-    this.pages[this.page].undoPos = this.undoPos;
+    if (this.page != null) {
+      this.pages[this.page].segments = this.segments;
+      this.pages[this.page].undoPos = this.undoPos;
+    }
     this.page = page;
+    $("#pages_button").html(this.pages[this.page].name);
+    $("#pages").hide();
     this.reset();
     this.segments = this.pages[page].segments;
     this.undoPos = this.pages[page].undoPos;
@@ -148,6 +155,7 @@ var DrawArea = function(canvas) {
   canvas.connectEvents('touchstart', 'mousedown', 'markstart');
   canvas.connectEvents('touchend', 'mouseup', 'markend');
   canvas.connectEvents('touchmove', 'mousemove', 'markmove');
+  canvas.new("Home");
 
   return canvas;
 }

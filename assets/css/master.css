@@ -36,3 +36,10 @@ body {
   font-size: 24px; 
   line-height: 17px;
 }
+
+#files {
+  width: 100px;
+  height: 37px;
+  border: 1px solid #ccc;
+  background-color: none;
+}

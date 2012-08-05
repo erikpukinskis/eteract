@@ -35,11 +35,15 @@
 			<div class="btn-group">
 				<button class="tool btn btn-large btn-primary active" onclick="tool('pen');" id="pen_tool">Pen</button>
 				<button class="tool btn btn-large" onclick="tool('eraser')" id="eraser_tool">Eraser</button>
-				<button class="tool btn btn-large icon" onclick="tool('link')" id="link_tool">&#9758;</button>
+			</div>
+
+			<div class="btn-group">			
+				<button class="btn btn-large icon" onclick="">&#9758;</button>
+				<button class="btn btn-large" onclick="newTarget()">+</button>
 			</div>
 
 			<div class="btn-group">
-				<button class="tool btn btn-large" onclick="$('#pages').toggle();" id="pages_button"></button>
+				<button class="btn btn-large" onclick="$('#pages').toggle();" id="pages_button"></button>
 				<div id="pages" class="hide">
 					<ul>
 					</ul>

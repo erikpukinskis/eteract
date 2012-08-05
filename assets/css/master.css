@@ -47,12 +47,6 @@ body {
   box-shadow: 1px 4px 5px rgba(0,0,0,0.04);
 }
 
-#pages ul {
-  min-height:10px;
-  margin: 0;
-  list-style: none;
-}
-
 #pages .callout-arrow {
   bottom: 0;
   background-color: white;
@@ -64,6 +58,20 @@ body {
   margin-bottom: -9px;
   margin-left: 10px;
   box-shadow: 4px 2px 5px rgba(0,0,0,0.04);
+}
+
+#pages.forTarget {
+  margin-left: -130px;
+}
+
+#pages.forTarget .callout-arrow {
+  margin-left: 90px;
+}
+
+#pages ul {
+  min-height:10px;
+  margin: 0;
+  list-style: none;
 }
 
 #pages li {
@@ -84,6 +92,10 @@ body {
 
 #pages a:hover {
   text-decoration: none;
+}
+
+.target {
+  z-index: 4;
 }
 
 #active_target {

@@ -65,6 +65,12 @@ var DrawArea = function(canvas) {
 
   canvas.pageselect = canvas.open;
 
+  canvas.setTarget = function(page) {
+    this.target = page;
+    $("#pages").hide();
+    this.setTool('link');
+  }
+
   canvas.markstart = function(p) {
     if (this.pendingMove) {
       clearTimeout(this.pendingMove);
@@ -84,7 +90,7 @@ var DrawArea = function(canvas) {
       this.prevD = null;
       line.draw(this);
     } else {
-      $("body").append("<div class='target' id='active_target'>&#9758; Home</div>");
+      $("body").append("<div class='target' id='active_target'>&#9758; " + this.pages[this.target].name + "</div>");
       $("#active_target").css({left: p.x, top: p.y, width: 0, height: 0});
     }
   }

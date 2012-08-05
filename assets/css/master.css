@@ -36,19 +36,3 @@ body {
   font-size: 24px; 
   line-height: 17px;
 }
-
-.frame {
-  position: absolute;
-  width: 200px;
-  height: 270px;
-  border: 2px solid #eee;
-}
-
-.frame .title {
-  height: 10px;
-  margin: -12px 0 0 -2px;
-  width: 204px;
-  color: white;
-  background-color: #eee;
-  text-transform: uppercase;
-}

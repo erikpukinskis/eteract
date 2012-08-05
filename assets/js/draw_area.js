@@ -19,6 +19,8 @@ var DrawArea = function(canvas) {
   canvas.segments = [];
   canvas.undoPos = 0;
   canvas.tool = "pen";
+  canvas.pages = [{name: "Home", segments: []}];
+  canvas.page = 0;
 
   canvas.BRUSHES = {
     pen: {strokeStyle: 'black', lineWidth: 1},
@@ -41,6 +43,23 @@ var DrawArea = function(canvas) {
     return this.tool == "pen" || this.tool == "eraser"
   }
 
+  canvas.new = function() {
+    var name = prompt("Name for new page:");
+    this.pages.push({name: name, segments: []});
+    this.open(this.pages.length-1);
+  }
+
+  canvas.open = function(page) {
+    this.pages[this.page].segments = this.segments;
+    this.pages[this.page].undoPos = this.undoPos;
+    this.page = page;
+    this.reset();
+    this.segments = this.pages[page].segments;
+    this.undoPos = this.pages[page].undoPos;
+    this.replay();
+  }
+
+
   canvas.markstart = function(p) {
     if (this.pendingMove) {
       clearTimeout(this.pendingMove);
@@ -58,12 +77,6 @@ var DrawArea = function(canvas) {
       this.isDown = true;
       this.prevD = null;
       line.draw(this);
-    } else if (this.tool == "frame") {
-      $(".picking.frame").addClass("picked").removeClass("picking");
-      var title = prompt("Name your frame.");
-      $(".picked.frame").append("<div class='title'>" + title + "</div>");
-      $(".picked.frame").removeClass("picked");
-      this.setTool(this.lastTool);
     }
   }
 

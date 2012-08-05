@@ -17,6 +17,12 @@ var DrawArea = function(canvas) {
   canvas.DROP_THRESHOLD = 4;
   canvas.segments = [];
   canvas.undoPos = 0;
+  canvas.tool = "pen";
+
+  canvas.BRUSHES = {
+    pen: {strokeStyle: 'black', lineWidth: 1},
+    eraser: {strokeStyle: 'white', lineWidth: 10},
+  }
 
   canvas.markstart = function(p) {
     if (this.pendingMove) {
@@ -82,8 +88,13 @@ var DrawArea = function(canvas) {
   }
 
   canvas.drawLine = function(start, end, color) {
-    if(!color) { color = "black"}
-    this.ctx.strokeStyle = color;
+    var ctx = this.ctx;
+    $.each(this.BRUSHES[this.tool], function(key, value) {
+      ctx[key] = value;
+    });
+
+    if(color) { this.ctx.strokeStyle = color }
+
     this.ctx.beginPath();  
     this.ctx.moveTo(start.x, start.y);
     this.ctx.lineTo(end.x, end.y);

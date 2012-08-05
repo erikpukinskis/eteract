@@ -30,14 +30,16 @@ var DrawArea = function(canvas) {
       clearTimeout(this.pendingMove);
       this.pendingMove = null;
     }
-    this.segments[this.undoPos] = [p];
+    var line = new Line(this.tool);
+    line.addPoint(p);
+    this.segments[this.undoPos] = line;
     this.undoPos++;
 
     msg("down");
     this.start = p;
     this.isDown = true;
     this.prevD = null;
-    this.drawSegment([p])
+    line.draw(this);
   }
 
   canvas.markend = function(p) {
@@ -53,14 +55,15 @@ var DrawArea = function(canvas) {
 
   canvas.movePen = function(p) {
     if (!this.isDown) { return }
-    this.drawLine(this.start, p);
-    this.segments[this.undoPos-1].push(p);
+    var line = this.segments[this.undoPos-1];
+    line.addPoint(p);
+    line.drawLast(this);
     this.start = p;
   }
 
   canvas.replay = function() {
     for(var i=0; i<this.undoPos; i++) {
-      this.drawSegment(this.segments[i]);
+      this.segments[i].draw(this);
     }
   }
 
@@ -74,37 +77,6 @@ var DrawArea = function(canvas) {
     if(this.segments[this.undoPos]) { this.undoPos++ }
     this.clearAll();
     this.replay();
-  }
-
-  canvas.drawSegment = function (pts) {
-    this.ctx.fillStyle = this.brush().strokeStyle;
-    this.ctx.beginPath();
-    var radius = Math.max(1, this.brush().lineWidth / 2);
-    this.ctx.arc(pts[0].x,pts[0].y,radius,0,Math.PI*2,true);
-    this.ctx.closePath();
-    this.ctx.fill();
-
-    for(var i=1; i<pts.length; i++) {
-      this.drawLine(pts[i-1], pts[i]);
-    }
-  }
-
-  canvas.drawLine = function(start, end, color) {
-    var ctx = this.ctx;
-    $.each(this.brush(), function(key, value) {
-      ctx[key] = value;
-    });
-
-    if(color) { this.ctx.strokeStyle = color }
-
-    this.ctx.beginPath();  
-    this.ctx.moveTo(start.x, start.y);
-    this.ctx.lineTo(end.x, end.y);
-    this.ctx.stroke();   
-  }
-
-  canvas.brush = function() {
-    return this.BRUSHES[this.tool];
   }
 
   canvas.connectEvents = function(touch, mouse, mark) {

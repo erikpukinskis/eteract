@@ -12,6 +12,7 @@ var DrawArea = function(canvas) {
   canvas.width = document.width;
   canvas.height = document.height;
   canvas.ctx = canvas.getContext("2d");  
+  canvas.ctx.lineCap = 'round';
   canvas.isDown = false;
   msg("ready");
   canvas.DROP_THRESHOLD = 4;
@@ -21,7 +22,7 @@ var DrawArea = function(canvas) {
 
   canvas.BRUSHES = {
     pen: {strokeStyle: 'black', lineWidth: 1},
-    eraser: {strokeStyle: 'white', lineWidth: 10},
+    eraser: {strokeStyle: 'white', lineWidth: 20},
   }
 
   canvas.markstart = function(p) {
@@ -76,9 +77,10 @@ var DrawArea = function(canvas) {
   }
 
   canvas.drawSegment = function (pts) {
-    this.ctx.fillStyle="black";
+    this.ctx.fillStyle = this.brush().strokeStyle;
     this.ctx.beginPath();
-    this.ctx.arc(pts[0].x,pts[0].y,1,0,Math.PI*2,true);
+    var radius = Math.max(1, this.brush().lineWidth / 2);
+    this.ctx.arc(pts[0].x,pts[0].y,radius,0,Math.PI*2,true);
     this.ctx.closePath();
     this.ctx.fill();
 
@@ -89,7 +91,7 @@ var DrawArea = function(canvas) {
 
   canvas.drawLine = function(start, end, color) {
     var ctx = this.ctx;
-    $.each(this.BRUSHES[this.tool], function(key, value) {
+    $.each(this.brush(), function(key, value) {
       ctx[key] = value;
     });
 
@@ -99,6 +101,10 @@ var DrawArea = function(canvas) {
     this.ctx.moveTo(start.x, start.y);
     this.ctx.lineTo(end.x, end.y);
     this.ctx.stroke();   
+  }
+
+  canvas.brush = function() {
+    return this.BRUSHES[this.tool];
   }
 
   canvas.connectEvents = function(touch, mouse, mark) {

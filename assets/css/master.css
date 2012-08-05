@@ -67,7 +67,6 @@ body {
 }
 
 #pages li {
-  padding: 15px;
   font-size: 1.2em;
   border-top: 1px solid #eee;
 }
@@ -77,9 +76,23 @@ body {
 }
 
 #pages a {
+  padding: 15px;
   color: #444;
+  width: 100%;
+  display: block;
 }
 
 #pages a:hover {
   text-decoration: none;
+}
+
+#active_target {
+  border: 1px solid red;
+  background-color: rgba(255,0,0,0.1);
+  min-width: 1px;
+  min-height: 1px;
+  position: absolute;
+  color: red;
+  text-align: center;
+  overflow: hidden;
 }

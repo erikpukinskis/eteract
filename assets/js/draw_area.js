@@ -33,9 +33,6 @@ var DrawArea = function(canvas) {
 
     this.lastTool = this.tool;
     this.tool = tool;
-    if(tool == "frame") {
-      $("body").append("<div class='picking frame'>");
-    }
   }
 
   canvas.isPen = function() {
@@ -49,7 +46,7 @@ var DrawArea = function(canvas) {
     this.pages.push({name: name, segments: [], undoPos: 0});
     var page = this.pages.length-1;
     this.open(page);
-    $("#pages ul").append("<li><a href='#' onclick='draw.open(" + page + "); return false;'>" + name + "</a></li>");
+    $("#pages ul").append("<li><a href='#' onclick='draw.pageselect(" + page + "); return false;'>" + name + "</a></li>");
   }
 
   canvas.open = function(page) {
@@ -66,12 +63,16 @@ var DrawArea = function(canvas) {
     this.replay();
   }
 
+  canvas.pageselect = canvas.open;
 
   canvas.markstart = function(p) {
     if (this.pendingMove) {
       clearTimeout(this.pendingMove);
       this.pendingMove = null;
     }
+
+    this.start = p;
+    this.isDown = true;
 
     if(this.isPen()) {
       var line = new Line(this.tool);
@@ -80,16 +81,20 @@ var DrawArea = function(canvas) {
       this.undoPos++;
 
       msg("down");
-      this.start = p;
-      this.isDown = true;
       this.prevD = null;
       line.draw(this);
+    } else {
+      $("body").append("<div class='target' id='active_target'>&#9758; Home</div>");
+      $("#active_target").css({left: p.x, top: p.y, width: 0, height: 0});
     }
   }
 
   canvas.markend = function(p) {
     msg("up");
     this.isDown = false;
+    if (this.tool == "link") {
+      this.setTool(this.lastTool);
+    }
   }
 
   canvas.markmove = function(p) {
@@ -97,9 +102,10 @@ var DrawArea = function(canvas) {
       this.pendingMove = setTimeout(function(canvas, p) {
         canvas.movePen(p);
       }, 1, this, p);
-    } else if(this.tool == "frame") {
-      var frame = $(".picking.frame");
-      frame.css({top: p.y + "px", left: p.x + "px"});
+    } else if (this.isDown) {
+      var w = p.x - this.start.x + "px";
+      var h = p.y - this.start.y + "px";
+      $("#active_target").css({width: w, height: h, 'line-height': h });
     }
   }
 
